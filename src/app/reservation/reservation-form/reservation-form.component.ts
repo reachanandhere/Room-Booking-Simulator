@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -8,13 +8,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { ReservationService } from '../reservation.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Reservation } from '../../models/reservation';
 
 @Component({
   selector: 'app-reservation-form',
   templateUrl: './reservation-form.component.html',
   styleUrl: './reservation-form.component.css',
 })
-export class ReservationFormComponent {
+export class ReservationFormComponent implements OnInit {
   reservationForm: FormGroup = new FormGroup({
     checkInDate: new FormControl('', Validators.required),
     checkOutDate: new FormControl('', {
@@ -25,7 +27,20 @@ export class ReservationFormComponent {
     roomNumber: new FormControl('', Validators.required),
   });
 
-  constructor(private reservationService: ReservationService) {}
+  constructor(
+    private reservationService: ReservationService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    let id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (id) {
+      let reservation: Reservation | undefined =
+        this.reservationService.getReservation(id);
+      if (reservation) this.reservationForm.patchValue(reservation);
+    }
+  }
 
   dateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -33,14 +48,13 @@ export class ReservationFormComponent {
       const checkOut = this.reservationForm?.get('checkOutDate')?.value;
 
       if (checkIn && checkOut && checkOut < checkIn) {
-       
         return { dateMismatch: true }; // Return an error if check-out is before check-in
       }
       return null;
     };
   }
 
-  get minCheckOutDate(){
+  get minCheckOutDate() {
     return this.checkInDate?.value;
   }
 
@@ -65,6 +79,19 @@ export class ReservationFormComponent {
   }
 
   onSubmit(): void {
-    this.reservationService.addReservation(this.reservationForm.value);
+    if (this.reservationForm.valid) {
+      let id = this.activatedRoute.snapshot.paramMap.get('id');
+      let reservation: Reservation | undefined = this.reservationForm.value;
+      if (id && reservation) {
+       
+        reservation.id = id;
+        this.reservationService.updateReservation(reservation);
+        this.router.navigate(['/list']);
+      } else {
+        this.reservationService.addReservation(this.reservationForm.value);
+        this.reservationForm.reset();
+        this.router.navigate(['/list']);
+      }
+    }
   }
 }
