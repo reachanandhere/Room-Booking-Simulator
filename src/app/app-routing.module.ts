@@ -8,19 +8,33 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    children: [
+      {
+        path: 'list',
+        component: ReservationListComponent,
+      },
+      {
+        path: 'new',
+        component: ReservationFormComponent,
+      },
+      {
+        path: 'edit/:id',
+        component: ReservationFormComponent,
+      }
+    ]
   },
-  {
-    path: 'list',
-    component: ReservationListComponent,
-  },
-  {
-    path: 'new',
-    component: ReservationFormComponent,
-  },
-  {
-    path: 'edit/:id',
-    component: ReservationFormComponent,
-  }
+  // {
+  //   path: 'list',
+  //   component: ReservationListComponent,
+  // },
+  // {
+  //   path: 'new',
+  //   component: ReservationFormComponent,
+  // },
+  // {
+  //   path: 'edit/:id',
+  //   component: ReservationFormComponent,
+  // }
 ];
 
 @NgModule({

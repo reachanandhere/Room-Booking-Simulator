@@ -1,6 +1,12 @@
-<div>
-    <h2>Welcome to the Hotel Reservation System</h2>
+<div class="container">
+    <h2 class="text-center mt-4">Welcome to the Hotel Reservation System</h2>
 
-    <button [routerLink]="['/new']">Create a new Reservation</button>
-    <button [routerLink]="['/list']">View All Reservations</button>
+    <div class="row d-flex justify-content-between">
+
+        <button class="col-md-5 btn btn-primary" [routerLink]="['/new']">Create a new Reservation</button>
+        <button class="col-md-5 btn btn-primary" [routerLink]="['/list']">View All Reservations</button>
+    </div>
+   
+
+    <router-outlet></router-outlet>
 </div>
