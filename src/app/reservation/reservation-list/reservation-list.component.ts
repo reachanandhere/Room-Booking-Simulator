@@ -5,19 +5,22 @@ import { Reservation } from '../../models/reservation';
 @Component({
   selector: 'app-reservation-list',
   templateUrl: './reservation-list.component.html',
-  styleUrl: './reservation-list.component.css'
+  styleUrl: './reservation-list.component.css',
 })
 export class ReservationListComponent {
-  reservations: Reservation[] = []
-  constructor(private reservationService: ReservationService) { }
+  reservations: Reservation[] = [];
+  constructor(private reservationService: ReservationService) {}
 
   ngOnInit() {
-    this.reservations = this.reservationService.getReservations();
+    this.reservationService.getReservations().subscribe((reservations) => {
+      this.reservations = reservations;
+    });
   }
-
 
   deleteReservation(id: string) {
     this.reservationService.deleteReservation(id);
-    this.reservations = this.reservationService.getReservations();
+    this.reservationService.getReservations().subscribe((reservations) => {
+      this.reservations = reservations;
+    });
   }
 }

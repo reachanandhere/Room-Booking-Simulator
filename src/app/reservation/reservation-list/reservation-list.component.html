@@ -2,9 +2,9 @@
 
 
 <div class="container mt-4">
-  <h2>Reservation List</h2>
+  <h2 class="mt-4">Reservation List</h2>
 
-  <ul *ngIf="reservations.length; else noReservations" class="list-group">
+  <!-- <ul *ngIf="reservations.length; else noReservations" class="list-group">
     <li *ngFor="let reservation of reservations" class="list-group-item">
       Guest Name: {{ reservation.guestName }}<br />
       Guest Email: {{ reservation.guestEmail }}<br />
@@ -18,7 +18,38 @@
       </div>
     
     </li>
-  </ul>
+  </ul> -->
+
+
+  <table class="mt-4 table table-striped text-center">
+    <thead>
+      <tr>
+        <th>Guest Name</th>
+        <th>Guest Email</th>
+        <th>Room Number</th>
+        <th>Check In Date</th>
+        <th>Check Out Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="reservations?.length; else noReservations">
+   
+      <tr  class="" *ngFor="let reservation of reservations">
+        <td>{{ reservation.guestName }}</td>
+        <td>{{ reservation.guestEmail }}</td>
+        <td>{{ reservation.roomNumber }}</td>
+        <td>{{ reservation.checkInDate }}</td>
+        <td>{{ reservation.checkOutDate }}</td>
+        <td>
+          <button type="button" class="btn btn-danger mx-2" (click)="deleteReservation(reservation.id)">Delete</button>
+          <button type="button" class="btn btn-primary mx-2" [routerLink]="['/edit', reservation.id]">Edit</button>
+        </td>
+      </tr>
+   
+  </tbody>
+   
+  </table>
+
   
   <ng-template #noReservations>
     <p>No reservations found</p>

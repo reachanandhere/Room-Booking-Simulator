@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Reservation } from '../models/reservation';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,15 +9,12 @@ import { Reservation } from '../models/reservation';
 export class ReservationService {
   private reservations: Reservation[] = [];
 
-  constructor() {
-    let reservations = localStorage.getItem('reservations');
-    if (reservations) {
-      this.reservations = JSON.parse(reservations);
-    } else [];
-  }
+  private apiURL = 'http://localhost:3000';
 
-  getReservations(): Reservation[] {
-    return this.reservations;
+  constructor(private httpClient: HttpClient) {}
+
+  getReservations(): Observable<Reservation[]> {
+    return this.httpClient.get<Reservation[]>(`${this.apiURL}/reservations`);
   }
 
   getReservation(id: string): Reservation | undefined {
@@ -26,7 +25,6 @@ export class ReservationService {
     const id = Math.random().toString(36).substr(2, 9);
     reservation.id = id;
     this.reservations.push(reservation);
-    localStorage.setItem('reservations', JSON.stringify(this.reservations));
   }
 
   deleteReservation(id: string): void {
