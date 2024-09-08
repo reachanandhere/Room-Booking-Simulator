@@ -36,9 +36,9 @@ export class ReservationFormComponent implements OnInit {
   ngOnInit() {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id) {
-      let reservation: Reservation | undefined =
-        this.reservationService.getReservation(id);
-      if (reservation) this.reservationForm.patchValue(reservation);
+      this.reservationService.getReservation(id).subscribe((reservation) => {
+        if (reservation) this.reservationForm.patchValue(reservation);
+      });
     }
   }
 
@@ -83,12 +83,11 @@ export class ReservationFormComponent implements OnInit {
       let id = this.activatedRoute.snapshot.paramMap.get('id');
       let reservation: Reservation | undefined = this.reservationForm.value;
       if (id && reservation) {
-       
         reservation.id = id;
-        this.reservationService.updateReservation(reservation);
+        this.reservationService.updateReservation(reservation).subscribe(() => {});
         this.router.navigate(['/list']);
       } else {
-        this.reservationService.addReservation(this.reservationForm.value);
+        this.reservationService.addReservation(this.reservationForm.value).subscribe(() => {}); 
         this.reservationForm.reset();
         this.router.navigate(['/list']);
       }

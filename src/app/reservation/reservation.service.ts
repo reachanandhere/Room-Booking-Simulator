@@ -17,25 +17,23 @@ export class ReservationService {
     return this.httpClient.get<Reservation[]>(`${this.apiURL}/reservations`);
   }
 
-  getReservation(id: string): Reservation | undefined {
-    return this.reservations.find((reservation) => reservation.id === id);
+  getReservation(id: string): Observable<Reservation> {
+    return this.httpClient.get<Reservation>(`${this.apiURL}/reservation/${id}`);
   }
 
-  addReservation(reservation: Reservation): void {
+  addReservation(reservation: Reservation): Observable<void> {
     const id = Math.random().toString(36).substr(2, 9);
     reservation.id = id;
-    this.reservations.push(reservation);
+    return this.httpClient.post<void>(`${this.apiURL}/reservation`, reservation);
   }
 
-  deleteReservation(id: string): void {
-    let index = this.reservations.findIndex(
-      (reservation) => reservation.id === id
-    );
-    this.reservations.splice(index, 1);
+  deleteReservation(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiURL}/reservation/${id}`);
   }
 
-  updateReservation(reservation: Reservation): void {
-    let index = this.reservations.findIndex((res) => reservation.id === res.id);
-    this.reservations[index] = reservation;
+  updateReservation(reservation: Reservation): Observable<void> {
+    // let index = this.reservations.findIndex((res) => reservation.id === res.id);
+    // this.reservations[index] = reservation;
+    return this.httpClient.post<void>(`${this.apiURL}/reservation`, reservation);
   }
 }

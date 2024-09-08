@@ -18,9 +18,8 @@ export class ReservationListComponent {
   }
 
   deleteReservation(id: string) {
-    this.reservationService.deleteReservation(id);
-    this.reservationService.getReservations().subscribe((reservations) => {
-      this.reservations = reservations;
+    this.reservationService.deleteReservation(id).subscribe(() => {
+      this.reservations = this.reservations.filter((res) => res.id !== id);
     });
   }
 }
